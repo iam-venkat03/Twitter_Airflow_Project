@@ -15,17 +15,17 @@ Here are the steps I followed:
  1. Open Windows PowerShell and run the following command:
    
     ``` wsl --install ```
-  
- * Restart your computer if asked.
+
+     * Restart your computer if asked.
    
- 2. Set Up the Ubuntu Environment:
+ 3. Set Up the Ubuntu Environment:
     Open the Ubuntu terminal and install the necessary packages
     
      ``` sudo apt-get update ```
     
      ``` sudo apt-get install -y python3 python3-pip python3-venv ```
     
- 3. Create a virtual environment for the Airflow installation:
+ 4. Create a virtual environment for the Airflow installation:
 
     ```
     python3 -m venv airflow_venv 
@@ -53,7 +53,9 @@ Here are the steps I followed:
  ```
 
    * You will be prompted to set a password for the admin user, which will be used to log in to the Airflow Web UI.
+     
    * Start the Airflow web server : ``` airflow webserver --port 8080 ```
+     
    * Access the Airflow Web UI:
      * Navigate to ``` http://localhost:8080 ``` in your web browser.
 
@@ -69,11 +71,17 @@ Here are the steps I followed:
 #### Create twitter_dag.py
 
 * Import necessary packages and define default arguments for the DAG.
+  
 * Create a DAG instance.
+  
 * Define the tasks the DAG needs to execute (e.g., run_etl).
+  
 * Use a PythonOperator to run the transformation script (twitter_etl.py).
+  
 * Call the Task instance to run.
+  
 * Set task dependencies using upstream or downstream symbols
+
     * For Example : Consider there are two tasks in the DAG : run_etl and save_etl.
     * If save_etl needs to be run after run_etl, then you need to mention like this
       
@@ -82,8 +90,11 @@ Here are the steps I followed:
  ### Executing DAG using Airflow Web Interface
 
  * It is very simple to execute DAG usign Airflow Web UI.
+   
  * To execute a DAG via the Airflow Web UI, search for the desired DAG using the "Search DAG" box.
+   
  * Select the DAG and click the run button(somewhat similar to this --> :arrow_forward:) in the top right corner, then select "Run DAG".
+   
  * The DAG execution status can be monitored in the Graph view; a green border indicates a successful run.
 
 ![Screenshot 2024-07-24 222926](https://github.com/user-attachments/assets/71b9ea10-ba98-4258-9327-2d068d440f4c)
