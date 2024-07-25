@@ -1,33 +1,47 @@
 # Airflow Project based on Twtitter data
 
 ## Description
- Building basic and simple ETL pipeline using Airfow with Twitter data
-The idea behind this project is to understand and implement basic functionalities of Airflow
-Building Dags, Understanding what tasks, Task instance, pipelines is the motive behind taking up project.
+This project involves building a basic ETL pipeline using Apache Airflow to process Twitter data. 
+The primary objective is to gain a deeper understanding of Airflow's core functionalities, such as creating Directed Acyclic Graphs (DAGs), managing tasks, and executing pipelines.
 
 ## Concepts / Requirements
 
 ### Installing Airflow
 
-The most time I spent on in this project is on installing Airflow software in my laptop. I tried to install in Amazon EC2 instance but was unable to do it.
-Then I tried to install it in my windows system directly, but had multiple issues with dependencies not being there. It took couple of days to find what was happening and atlast was not able to install it directly into my system. 
+A significant portion of this project was dedicated to setting up Apache Airflow on my laptop. After unsuccessful attempts to install it on an Amazon EC2 instance and directly on a Windows system, 
+I encountered numerous dependency issues. Eventually, I successfully installed Airflow using the Windows Subsystem for Linux (WSL). 
+Here are the steps I followed:
 
-Then I tried to install Airflow in an WSL instance. It worked and below are the steps to do it:
-There are multiple ways to install WSL. I will mention how I did it:
- * First, Open Windows Powershell, then enter the following command  :  ``` wsl --install ```
+ 1. Open Windows PowerShell and run the following command:
+   
+    ``` wsl --install ```
+  
  * Restart your computer if asked.
- * Then open the Ubuntu Environment and install the necessary packages:
-    * ``` sudo apt-get update ```
-    * ``` sudo apt-get install -y python3 python3-pip python3-venv ```
-    * Then create a virtual environment to start the airflow installation process :
-       * ``` python3 -m venv airflow_venv ```
-       * ``` source airflow_venv/bin/activate ```
-    * ``` export AIRFLOW_HOME=~/airflow ```
-    * Install Airfow :
+   
+ 2. Set Up the Ubuntu Environment:
+    Open the Ubuntu terminal and install the necessary packages
+    
+     ``` sudo apt-get update ```
+    
+     ``` sudo apt-get install -y python3 python3-pip python3-venv ```
+    
+ 3. Create a virtual environment for the Airflow installation:
+
+    ```
+    python3 -m venv airflow_venv 
+    source airflow_venv/bin/activate 
+    export AIRFLOW_HOME=~/airflow
+    ```
+    
+     * Install Airfow :
       
       ``` pip install apache-airflow[postgres,google] --constraint "https://raw.githubusercontent.com/apache/airflow/constraints-2.5.1/constraints-3.8.txt" ```
-    * Initialize Airflow DB : ``` airflow db init ```
-    * Create an admin user to access Airflow WebUI and create/run dags
+    
+       * Initialize the Airflow Database:
+         
+           ``` airflow db init ```
+       
+       * Create an admin user to access Airflow WebUI and create/run dags
   
   ```      
   airflow users create \
@@ -38,41 +52,64 @@ There are multiple ways to install WSL. I will mention how I did it:
   --email admin@example.com
  ```
 
-   * Once the above command is run, a prompt to enter the password will be generated which can be used to login into Airflow WebUI
+   * You will be prompted to set a password for the admin user, which will be used to log in to the Airflow Web UI.
    * Start the Airflow web server : ``` airflow webserver --port 8080 ```
-   * Access the web server : ``` http://localhost:8080 ```
+   * Access the Airflow Web UI:
+     * Navigate to ``` http://localhost:8080 ``` in your web browser.
 
-### Creating DAG
-   #### Create twitter_etl.py
+### Creating DAG 
+#### Create twitter_etl.py
 
- * It reads csv file from the local path ('/home/venkat/airflow/twitter_dag/cleandata.csv')
- * In order to move files from Windows to WSL Ubuntu instance, go to File explorer and type ``` \\wsl$ ``` to access the Ubuntu system and place the files in the required folder.
- * Some basic transformation logic is written and the updated file is returned ('/home/venkat/airflow/twitter_dag/elon_musk_tweets.csv').
+* This script reads a CSV file from a specified path (/home/username/airflow/twitter_dag/cleandata.csv).
+ 
+* To transfer files from Windows to the WSL Ubuntu environment, use the File Explorer and enter ``` \\wsl$ ``` to access the Ubuntu system. Place the files in the desired folder.
+  
+* Basic data transformation logic is applied, and the output file is saved as /home/username/airflow/twitter_dag/elon_musk_tweets.csv.
 
-   #### Create twitter_dag.py
+#### Create twitter_dag.py
 
- * Importing necessary packages and defining the default arguments for the DAG.
- * Create a instance for the DAG.
- * Define the tasks that DAG needs to run (run_etl).
- * I created a PythonOperator task since the transformation code (twitter_etl.py) is written using Python.
- * Call the Task instance to run.
-
- * If multiple tasks are created, you can use upstream or downstream symbols to call and run the tasks.
+* Import necessary packages and define default arguments for the DAG.
+* Create a DAG instance.
+* Define the tasks the DAG needs to execute (e.g., run_etl).
+* Use a PythonOperator to run the transformation script (twitter_etl.py).
+* Call the Task instance to run.
+* Set task dependencies using upstream or downstream symbols
     * For Example : Consider there are two tasks in the DAG : run_etl and save_etl.
     * If save_etl needs to be run after run_etl, then you need to mention like this
       
       ``` run_etl >> save_etl ``` or ``` save_etl << run_etl ```
- * This is how a DAG is created.
- 
  
  ### Executing DAG using Airflow Web Interface
 
  * It is very simple to execute DAG usign Airflow Web UI.
- * Once you enter into Web UI, we can search for our DAG in 'Search DAG' search box.
- * Select the required DAG. On the right corner you can see run button (somewhat similar to this --> :arrow_forward:), click it and select Run DAG.
- * It will execute the DAG. Go on to Graph mode in Web UI and if the box is surrouded by green border, it means the DAG run is successful.
- * 
+ * To execute a DAG via the Airflow Web UI, search for the desired DAG using the "Search DAG" box.
+ * Select the DAG and click the run button(somewhat similar to this --> :arrow_forward:) in the top right corner, then select "Run DAG".
+ * The DAG execution status can be monitored in the Graph view; a green border indicates a successful run.
 
+![Screenshot 2024-07-24 222926](https://github.com/user-attachments/assets/71b9ea10-ba98-4258-9327-2d068d440f4c)
 
+ * You can see the runs and its status like this :
+   
+ ![Screenshot 2024-07-23 134104](https://github.com/user-attachments/assets/c8bcf4a1-8638-4965-968d-48c53653bd63)   
+
+ ![Screenshot 2024-07-24 222843](https://github.com/user-attachments/assets/5242d09f-3a32-42bc-998e-03f5b0fecd74)
+
+ * In this project, successful execution is verified by the presence of the elon_musk_tweets.csv file.
+   
+   * This is before DAG run :
+
+       ![Screenshot 2024-07-23 133738](https://github.com/user-attachments/assets/fec31807-a49e-4f33-b966-adcd2d5b4178)
+
+   * This is after DAG run:
+  
+       ![Screenshot 2024-07-24 223038](https://github.com/user-attachments/assets/d244f7f3-0f6f-483b-83cc-2962923a4eae)
 
    
+ * The file is available and hence the DAG run is actually sucessful.
+
+###  Reference Video :
+<a href="https://www.youtube.com/watch?v=q8q3OFFfY6c"
+target="_blank"><img src="https://t3.ftcdn.net/jpg/04/74/05/94/360_F_474059464_qldYuzxaUWEwNTtYBJ44VN89ARuFktHW.jpg" 
+alt="Reference Youtube Video Link" width="100" height="75" border="5" /></a>
+
+## THANKS!
