@@ -118,6 +118,20 @@ Here are the steps I followed:
    
  * The file is available and hence the DAG run is actually sucessful.
 
+### Sidenote :
+ #### Deleting a WSL Instance
+ * To delete a WSL Instance, open Windows Powershell and type the following command:
+   
+   ```
+   PS C:\Users\venka> wsl -l -v
+   NAME      STATE           VERSION
+   Ubuntu    Stopped         2
+   PS C:\Users\venka> wsl --unregister Ubuntu
+   Unregistering.
+   The operation completed successfully.
+   PS C:\Users\venka>
+```
+
 ###  Reference Video :
 <a href="https://www.youtube.com/watch?v=q8q3OFFfY6c"
 target="_blank"><img src="https://t3.ftcdn.net/jpg/04/74/05/94/360_F_474059464_qldYuzxaUWEwNTtYBJ44VN89ARuFktHW.jpg" 
